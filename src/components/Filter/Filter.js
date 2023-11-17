@@ -1,4 +1,4 @@
-import css from './index.module.css';
+import css from './Filter.module.css';
 
 const Filter = ({ handleFilter }) => {
   return (

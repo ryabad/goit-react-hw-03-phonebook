@@ -1,8 +1,8 @@
 import { Component } from 'react';
 import { nanoid } from 'nanoid';
-import ContactForm from './ContactForm';
-import Filter from './Filter';
-import ContactList from './ContactList';
+import ContactForm from './ContactForm/ContactForm';
+import Filter from './Filter/Filter';
+import ContactList from './ContactList/ContactList';
 import Notiflix from 'notiflix';
 
 import css from './App.module.css';
@@ -33,18 +33,42 @@ class App extends Component {
       ...newContact,
       id: nanoid(),
     };
-    this.setState(prevState => {
-      return {
-        contacts: [...prevState.contacts, newContactObj],
-      };
-    });
+    this.setState(
+      prevState => {
+        return {
+          contacts: [...prevState.contacts, newContactObj],
+        };
+      },
+      () => {
+        Notiflix.Notify.success(`${newContactObj.name} has been added!`);
+      }
+    );
   };
 
   handleDeleteBtn = id => {
+    const deletedContact = this.state.contacts.find(el => el.id === id);
+    Notiflix.Notify.info(`${deletedContact.name} was deleted!`);
+
     this.setState(prevState => ({
       contacts: prevState.contacts.filter(el => el.id !== id),
     }));
   };
+
+  componentDidMount() {
+    const localData = localStorage.getItem('contactsData');
+
+    if (localData && localData.length > 0) {
+      this.setState({ contacts: JSON.parse(localData) });
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.contacts.length !== this.state.contacts.length) {
+      localStorage.setItem('contactsData', JSON.stringify(this.state.contacts));
+    }
+    // prevState.contacts.length !== this.state.contacts.length &&
+    //   localStorage.setItem('contactsData', JSON.stringify(this.state.contacts));
+  }
 
   render() {
     const { contacts, filter } = this.state;

@@ -1,4 +1,4 @@
-import css from './index.module.css';
+import css from './ContactList.module.css';
 
 const ContactItem = ({ contacts, handleDelete }) => {
   return (
